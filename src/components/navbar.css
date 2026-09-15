@@ -1,0 +1,60 @@
+.navbar-list {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    background: #ffffff;
+    border-bottom: 1px solid #DBEAFE;
+ height: 70px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin:1rem;
+  padding: 0 1rem;
+}
+.logo img{
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
+  z-index: 10;
+  color: #2563EB;
+  
+}
+.logo{
+    color: #2563EB;
+    font-weight: 800;
+    font-size: xx-large;
+}
+
+
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.theme {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1.4rem;
+    color: #2563EB;
+}
+
+.user-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #2563EB;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
