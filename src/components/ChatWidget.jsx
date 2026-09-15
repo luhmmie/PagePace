@@ -76,7 +76,7 @@ function MessageBubble({ role, text, time }) {
           <Bot size={16} className="text-white" />
         </div>
       )}
-      <div className={`flex flex-col ${isUser ? "items-end" : "items-start"} max-w-[75%]`}>
+      <div className={`flex flex-col ${isUser ? "items-end" : "items-start"} max-w-[88%]`}>
         <div
           className={`rounded-2xl px-4 py-2.5 text-[15px] leading-snug ${
             isUser
@@ -150,7 +150,7 @@ export default function ChatWidget() {
   }
 
   return (
-    <div className="flex flex-col h-[100dvh] sm:h-[700px] w-full max-w-full sm:max-w-sm mx-auto bg-slate-100 rounded-none sm:rounded-3xl overflow-hidden shadow-xl border border-slate-200">
+    <div className="flex flex-col h-[500px] sm:h-[600px] w-full bg-slate-100 rounded-2xl overflow-hidden shadow-xl border border-slate-200">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 bg-white border-b border-slate-100">
         <div className="flex items-center gap-3">

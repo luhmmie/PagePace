@@ -15,9 +15,9 @@ const NavBar = () => {
       </div>
 
       <div className="navbar-right">
-        <div className="theme" onClick={() => setDarkMode(!darkMode)}>
+        {/* <div className="theme" onClick={() => setDarkMode(!darkMode)}>
           {darkMode ? <CiDark /> : <CiLight />}
-        </div>
+        </div> */}
 
         <div className="user-avatar">
           {userName.charAt(0).toUpperCase()}

@@ -1,0 +1,15 @@
+ .has-reminder {
+          font-weight: bold;
+          position: relative;
+        }
+        .has-reminder::after {
+          content: '';
+          position: absolute;
+          bottom: 4px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 4px;
+          height: 4px;
+          border-radius: 50%;
+          background-color: #2563eb;
+        }

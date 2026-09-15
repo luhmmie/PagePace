@@ -26,7 +26,9 @@ const Course = () => {
   const [aiResponse, setAiResponse] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
   const containerRef = useRef(null);
-  const [containerWidth, setContainerWidth] = useState(null);
+  const [containerWidth, setContainerWidth] = useState(
+    typeof window !== 'undefined' ? Math.min(window.innerWidth - 64, 900) : 600
+  );
 
   useEffect(() => {
     const loadCourse = async () => {
@@ -42,14 +44,17 @@ const Course = () => {
   }, [id]);
 
   useEffect(() => {
-    const updateWidth = () => {
-      if (containerRef.current) {
-        setContainerWidth(containerRef.current.offsetWidth);
-      }
+    if (!containerRef.current) return;
+
+    const updateWidth = (entries) => {
+      const width = entries?.[0]?.contentRect?.width;
+      if (width) setContainerWidth(width);
     };
+
     updateWidth();
-    window.addEventListener('resize', updateWidth);
-    return () => window.removeEventListener('resize', updateWidth);
+    const observer = new ResizeObserver(updateWidth);
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
   }, []);
 
   const onDocumentLoadSuccess = ({ numPages }) => {
@@ -141,78 +146,83 @@ const Course = () => {
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-6">
+      {/* PDF Viewer + Chatbox side by side */}
+      <div className="flex flex-col xl:flex-row gap-6 mb-6">
         {/* PDF Viewer */}
         <div className="flex-1 min-w-0">
-          <div className="flex flex-wrap items-center gap-3 bg-white rounded-full px-4 py-2 shadow-sm border w-fit mb-4 mx-auto lg:mx-0">
-            <button onClick={() => goToPage(pageNumber - 1)} className="text-gray-500 hover:text-gray-800"><GrFormPrevious /></button>
-            <span className="text-sm">{pageNumber} / {numPages || '?'}</span>
-            <button onClick={() => goToPage(pageNumber + 1)} className="text-gray-500 hover:text-gray-800"><MdNavigateNext /></button>
-            <span className="text-gray-300">|</span>
-            <button onClick={() => setScale((s) => Math.max(0.5, s - 0.1))} className="text-gray-500 hover:text-gray-800"><LuMinus/></button>
-            <span className="text-sm">{Math.round(scale * 100)}%</span>
-            <button onClick={() => setScale((s) => Math.min(2, s + 0.1))} className="text-gray-500 hover:text-gray-800"><AiOutlinePlus/></button>
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 bg-white rounded-2xl sm:rounded-full px-3 sm:px-4 py-2 shadow-sm border max-w-full w-fit mb-4 mx-auto xl:mx-0">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <button onClick={() => goToPage(pageNumber - 1)} className="text-gray-500 hover:text-gray-800 text-lg shrink-0"><GrFormPrevious /></button>
+              <span className="text-xs sm:text-sm shrink-0 whitespace-nowrap">{pageNumber} / {numPages || '?'}</span>
+              <button onClick={() => goToPage(pageNumber + 1)} className="text-gray-500 hover:text-gray-800 text-lg shrink-0"><MdNavigateNext /></button>
+            </div>
+            <span className="hidden sm:inline text-gray-300 shrink-0">|</span>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <button onClick={() => setScale((s) => Math.max(0.5, s - 0.1))} className="text-gray-500 hover:text-gray-800 text-lg shrink-0"><LuMinus/></button>
+              <span className="text-xs sm:text-sm shrink-0 whitespace-nowrap">{Math.round(scale * 100)}%</span>
+              <button onClick={() => setScale((s) => Math.min(2, s + 0.1))} className="text-gray-500 hover:text-gray-800 text-lg shrink-0"><AiOutlinePlus/></button>
+            </div>
           </div>
 
-          <div ref={containerRef} className="bg-gray-100 rounded-lg p-2 sm:p-4 flex justify-center overflow-x-auto">
+          <div ref={containerRef} className="bg-gray-100 rounded-lg p-2 sm:p-4 flex justify-start overflow-x-auto max-w-full">
             <Document file={course.fileData} onLoadSuccess={onDocumentLoadSuccess}>
               <Page
                 pageNumber={pageNumber}
-                width={containerWidth ? Math.min(containerWidth - 32, 800) * scale : undefined}
+                width={(containerWidth - 32) * scale}
               />
             </Document>
           </div>
         </div>
 
-        {/* Right sidebar */}
-        <div className="w-full lg:w-72 lg:flex-shrink-0">
-          <button
-            onClick={markPageAsRead}
-            className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg mb-4 font-medium ${
-              course.readPages.includes(pageNumber)
-                ? 'bg-green-50 text-green-700 border border-green-200'
-                : 'bg-blue-600 text-white hover:bg-blue-700'
-            }`}
-          >
-            {course.readPages.includes(pageNumber) ? 'Marked as Done' : 'Mark Page as Done'}
-          </button>
-
-          <div className="bg-white rounded-lg border p-4 mb-4">
-            <h3 className="text-xs font-semibold text-gray-500 mb-3 uppercase">Progress</h3>
-            <div className="flex flex-col gap-2 max-h-48 sm:max-h-64 overflow-y-auto">
-              {numPages && Array.from({ length: numPages }, (_, i) => i + 1).map((p) => (
-                <button
-                  key={p}
-                  onClick={() => goToPage(p)}
-                  className={`text-left text-sm px-2 py-1 rounded ${
-                    p === pageNumber
-                      ? 'bg-blue-50 text-blue-700 font-medium'
-                      : course.readPages.includes(p)
-                      ? 'text-gray-400 line-through'
-                      : 'text-gray-600'
-                  }`}
-                >
-                  Page {p}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg border p-4 mb-4 bg-blue-300">
-            <h3 className="text-xs font-semibold text-gray-500 mb-2 uppercase">Note Pace</h3>
-            <textarea
-              value={noteText}
-              onChange={(e) => setNoteText(e.target.value)}
-              onBlur={saveNote}
-              placeholder="No notes added yet. Click to add a note."
-              className="w-full text-base sm:text-sm border rounded-md p-2 min-h-[80px] focus:outline-none focus:border-blue-500"
-            />
-          </div>
-
-         <div>
-          <ChatWidget/>
-         </div>
+        {/* Chatbox beside the PDF */}
+        <div className="w-full xl:w-[420px] xl:flex-shrink-0">
+          <ChatWidget />
         </div>
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-4 mb-4">
+        <button
+          onClick={markPageAsRead}
+          className={`sm:self-start flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium whitespace-nowrap ${
+            course.readPages.includes(pageNumber)
+              ? 'bg-green-50 text-green-700 border border-green-200'
+              : 'bg-blue-600 text-white hover:bg-blue-700'
+          }`}
+        >
+          {course.readPages.includes(pageNumber) ? 'Marked as Done' : 'Mark Page as Done'}
+        </button>
+
+        <div className="w-full sm:w-64 bg-white rounded-lg border p-4">
+          <h3 className="text-xs font-semibold text-gray-500 mb-3 uppercase">Progress</h3>
+          <div className="flex flex-col gap-2 max-h-48 sm:max-h-64 overflow-y-auto">
+            {numPages && Array.from({ length: numPages }, (_, i) => i + 1).map((p) => (
+              <button
+                key={p}
+                onClick={() => goToPage(p)}
+                className={`text-left text-sm px-2 py-1 rounded ${
+                  p === pageNumber
+                    ? 'bg-blue-50 text-blue-700 font-medium'
+                    : course.readPages.includes(p)
+                    ? 'text-gray-400 line-through'
+                    : 'text-gray-600'
+                }`}
+              >
+                Page {p}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-lg border p-4 mb-4 bg-blue-300">
+        <h3 className="text-xs font-semibold text-gray-500 mb-2 uppercase">Note Pace</h3>
+        <textarea
+          value={noteText}
+          onChange={(e) => setNoteText(e.target.value)}
+          onBlur={saveNote}
+          placeholder="No notes added yet. Click to add a note."
+          className="w-full text-base sm:text-sm border rounded-md p-2 min-h-[80px] focus:outline-none focus:border-blue-500"
+        />
       </div>
     </div>
   );

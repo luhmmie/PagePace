@@ -75,7 +75,7 @@ const handleDeleteAccount = async () => {
           className="w-full border border-gray-300 rounded-md px-3 py-2 text-base"
         />
       </div>
-
+{/* 
 <div className="flex items-center justify-between">
   <span className="text-gray-700">Dark Mode</span>
   <button
@@ -92,7 +92,7 @@ const handleDeleteAccount = async () => {
     />
   </button>
 </div>
-      
+       */}
       <div>
         <label className="block text-sm font-medium mb-1">Email</label>
         <input

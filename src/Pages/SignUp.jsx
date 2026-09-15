@@ -93,7 +93,7 @@ const SignUp = () => {
       <div className="signup-form   w-full max-w-sm bg-white p-8 rounded-lg shadow-md">
         <div className="login-heading flex flex-col items-center mb-8">
       <h3 className="text-blue-600 font-extrabold text-4xl p-4"> PagePace</h3>
-        <p className="text-gray-500 text-sm">Welcome back! Lets get back to work</p>
+        <p className="text-gray-500 text-sm">Welcome! Lets get you started</p>
       </div>
        <form className="sign-up-form   flex flex-col gap-4   " onSubmit={handleSignup}>
           <label htmlFor="username text-sm font-medium text-gray-700 mb-1">Username</label>
