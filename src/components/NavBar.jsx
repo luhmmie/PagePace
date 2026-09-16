@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
+import React from 'react'
 import LogoImage from "../assets/logo.png";
 import { CiLight } from "react-icons/ci";
 import { CiDark } from "react-icons/ci";
+import { useDarkMode } from '../hooks/useDarkMode.js';
 import "./navbar.css";
 
 const NavBar = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode, toggleDarkMode } = useDarkMode();
   const userName = "Faith";
 
   return (
@@ -15,13 +16,13 @@ const NavBar = () => {
       </div>
 
       <div className="navbar-right">
-        {/* <div className="theme" onClick={() => setDarkMode(!darkMode)}>
+        <div className="theme" onClick={toggleDarkMode}>
           {darkMode ? <CiDark /> : <CiLight />}
-        </div> */}
-
-        <div className="user-avatar">
-          {userName.charAt(0).toUpperCase()}
         </div>
+
+        {/* <div className="user-avatar">
+          {userName.charAt(0).toUpperCase()}
+        </div> */}
       </div>
     </div>
   )

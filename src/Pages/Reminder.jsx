@@ -4,21 +4,34 @@ import { getCurrentUser } from '../utils/auth.js';
 const Reminder = () => {
   const [reminders, setReminders] = useState([]);
   const [title, setTitle] = useState("");
-  const [date, setDate] = useState("");  
+  const [date, setDate] = useState("");
+
+  const currentUser = getCurrentUser();
+
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("PagePace_reminders")) || [];
-    setReminders(saved);
+    setReminders(saved.filter((r) => r.userId === currentUser?.id || r.userId === undefined));
   }, []);
 
-  const saveReminders = (updated) => {
-    setReminders(updated);
-    localStorage.setItem("PagePace_reminders", JSON.stringify(updated));
+  const saveReminders = (updatedForUser) => {
+   
+    const all = JSON.parse(localStorage.getItem("PagePace_reminders")) || [];
+    const otherUsers = all.filter((r) => r.userId !== currentUser?.id && r.userId !== undefined);
+    const merged = [...otherUsers, ...updatedForUser];
+    localStorage.setItem("PagePace_reminders", JSON.stringify(merged));
+    setReminders(updatedForUser);
   };
 
   const handleAdd = (e) => {
     e.preventDefault();
     if (!title || !date) return;
-    const newReminder = { id: Date.now(), title, date, done: false };
+    const newReminder = {
+      id: Date.now(),
+      title,
+      date, 
+      done: false,
+      userId: currentUser?.id,
+    };
     saveReminders([...reminders, newReminder]);
     setTitle("");
     setDate("");

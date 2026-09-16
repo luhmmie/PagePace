@@ -58,3 +58,22 @@
     font-weight: 600;
     font-size: 0.95rem;
 }
+
+/* Dark mode */
+.dark .navbar-list {
+    background: #1f2937;
+    border-bottom: 1px solid #374151;
+}
+
+.dark .logo {
+    color: #60a5fa;
+}
+
+.dark .theme {
+    color: #60a5fa;
+}
+
+.dark .user-avatar {
+    background-color: #60a5fa;
+    color: #1f2937;
+}

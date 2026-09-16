@@ -192,9 +192,9 @@ const Course = () => {
           {course.readPages.includes(pageNumber) ? 'Marked as Done' : 'Mark Page as Done'}
         </button>
 
-        <div className="w-full sm:w-64 bg-white rounded-lg border p-4">
-          <h3 className="text-xs font-semibold text-gray-500 mb-3 uppercase">Progress</h3>
-          <div className="flex flex-col gap-2 max-h-48 sm:max-h-64 overflow-y-auto">
+         <div className="bg-white rounded-lg border p-4 mb-4">
+            <h3 className="text-xs font-semibold text-gray-500 mb-3 uppercase">Progress</h3>
+            <div className="flex flex-col gap-2 max-h-48 sm:max-h-64 overflow-y-auto">
             {numPages && Array.from({ length: numPages }, (_, i) => i + 1).map((p) => (
               <button
                 key={p}
@@ -214,7 +214,7 @@ const Course = () => {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg border p-4 mb-4 bg-blue-300">
+      {/* <div className="bg-white rounded-lg border p-4 mb-4 bg-blue-300">
         <h3 className="text-xs font-semibold text-gray-500 mb-2 uppercase">Note Pace</h3>
         <textarea
           value={noteText}
@@ -223,7 +223,7 @@ const Course = () => {
           placeholder="No notes added yet. Click to add a note."
           className="w-full text-base sm:text-sm border rounded-md p-2 min-h-[80px] focus:outline-none focus:border-blue-500"
         />
-      </div>
+      </div> */}
     </div>
   );
 };
